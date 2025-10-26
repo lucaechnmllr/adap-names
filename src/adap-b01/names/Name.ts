@@ -23,7 +23,7 @@ export class Name {
     // @methodtype initialization-method
     constructor(other: string[], delimiter?: string) {
         this.delimiter = delimiter ?? DEFAULT_DELIMITER;
-        this.components = other;
+        this.components = [...other];
     }
 
     /**
@@ -31,8 +31,10 @@ export class Name {
      * Special characters are not escaped (creating a human-readable string)
      * Users can vary the delimiter character to be used
      */
+    // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        return this.components.join(delimiter);
+        const parts = this.components.map(c => Name.unmask(c));
+        return parts.join(delimiter);
     }
 
     /** 
@@ -42,11 +44,47 @@ export class Name {
      */
     // @methodtype conversion-method
     public asDataString(): string {
-        throw new Error("Method not implemented.");
-        // TODO implement
+        const parts = this.components.map(c =>
+            Name.maskForDelimiter(Name.unmask(c), DEFAULT_DELIMITER)
+        );
+        return parts.join(DEFAULT_DELIMITER);
+    }
+
+    // @methodtype helper-method
+    private static unmask(comp: string): string {
+        let out = '';
+        for (let i = 0; i < comp.length; i++) {
+            const ch = comp[i];
+            if (ch === ESCAPE_CHARACTER) {
+                if (i + 1 < comp.length) {
+                    out += comp[i + 1];
+                    i++;
+                }
+                else {
+                    out += ESCAPE_CHARACTER;
+                }
+            }
+            else {
+                out += ch;
+            }
+        }
+        return out;
+    }
+
+    // @methodtype helper-method
+    private static maskForDelimiter(raw: string, delimiter: string): string {
+        let out = '';
+        for (const ch of raw) {
+            if (ch === ESCAPE_CHARACTER || ch === delimiter) {
+                out += ESCAPE_CHARACTER;
+            }
+            out += ch;
+        }
+        return out;
     }
 
     /** Returns properly masked component string */
+    // @methodtype get-method
     public getComponent(i: number): string {
         return this.components[i];
     }

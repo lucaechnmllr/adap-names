@@ -16,6 +16,21 @@ describe("Basic function tests", () => {
   });
 });
 
+describe("String conversion tests", () => {
+  it("test asString", () => {
+    const n = new Name(["a\\.\\."]);
+    console.log(n.asString());
+    expect(n.asString()).toBe("a..");
+  });
+
+  it("test asDataString", () => {
+    const n = new Name(["oss", "fau\\.de", "de"]);
+    console.log(n.asDataString());
+    expect(n.asDataString()).toBe("oss.fau\\.de.de");
+  });
+});
+
+
 describe("Append function tests", () => {
   it("test append", () => {
     let n: Name = new Name(["oss", "cs", "fau"]);
