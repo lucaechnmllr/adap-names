@@ -22,6 +22,17 @@ describe("Basic StringName function tests", () => {
   });
 });
 
+describe("MyOwn StringName function tests", () => {
+  it("test empty input", () => {
+    let n: Name = new StringName("");
+    expect(n.getNoComponents()).toBe(1);
+    n.append("test");
+    console.log(n.asString());
+    expect(n.asString()).toBe(".test");
+    expect(n.getNoComponents()).toBe(2);
+  });
+});
+
 describe("Basic StringArrayName function tests", () => {
   it("test insert", () => {
     let n: Name = new StringArrayName(["oss", "fau", "de"]);
@@ -38,6 +49,10 @@ describe("Basic StringArrayName function tests", () => {
     n.remove(0);
     expect(n.asString()).toBe("cs.fau.de");
   });
+  it("test asString", () => {
+      const n = new StringArrayName(["a\\.\\."]);
+      expect(n.asString()).toBe("a..");
+    });
 });
 
 describe("Delimiter function tests", () => {
@@ -57,3 +72,5 @@ describe("Escape character extravaganza", () => {
     expect(n.asString()).toBe("oss.cs.fau.de#people");
   });
 });
+
+

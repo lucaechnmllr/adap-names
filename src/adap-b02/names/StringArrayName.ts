@@ -1,57 +1,65 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
-import { Name } from "./Name";
+import { AbstractName } from "./AbstractName";
 
-export class StringArrayName implements Name {
+export class StringArrayName extends AbstractName {
 
     protected delimiter: string = DEFAULT_DELIMITER;
     protected components: string[] = [];
 
+
     constructor(source: string[], delimiter?: string) {
-        throw new Error("needs implementation or deletion");
+        super();
+        this.delimiter = delimiter ?? DEFAULT_DELIMITER;
+        this.components = [...source];
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
+        if (this.components.length === 0) {
+            return "";
+        }
+        const parts = this.components.map(c => AbstractName.unmask(c));
+        return parts.join(delimiter);
     }
 
     public asDataString(): string {
-        throw new Error("needs implementation or deletion");
-    }
-
-    public getDelimiterCharacter(): string {
-        throw new Error("needs implementation or deletion");
+        if (this.components.length === 0) {
+            return "";
+        }
+        const parts = this.components.map(c =>
+            AbstractName.maskForDelimiter(AbstractName.unmask(c), DEFAULT_DELIMITER)
+        );
+        return parts.join(DEFAULT_DELIMITER);
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation or deletion");
+        return this.components.length === 0;
     }
 
     public getNoComponents(): number {
-        throw new Error("needs implementation or deletion");
+        return this.components.length;
     }
 
     public getComponent(i: number): string {
-        throw new Error("needs implementation or deletion");
+        this.validateIndex(i);
+        return this.components[i];
     }
 
     public setComponent(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.validateIndex(i);
+        this.components[i] = c;
     }
 
     public insert(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.validateIndex(i, true);
+        this.components.splice(i, 0, c);
     }
 
     public append(c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.components.push(c);
     }
 
     public remove(i: number): void {
-        throw new Error("needs implementation or deletion");
+        this.validateIndex(i);
+        this.components.splice(i, 1);
     }
-
-    public concat(other: Name): void {
-        throw new Error("needs implementation or deletion");
-    }
-
 }
