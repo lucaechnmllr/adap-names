@@ -27,9 +27,18 @@ describe("MyOwn StringName function tests", () => {
     let n: Name = new StringName("");
     expect(n.getNoComponents()).toBe(1);
     n.append("test");
-    console.log(n.asString());
+    //console.log(n.asString());
     expect(n.asString()).toBe(".test");
     expect(n.getNoComponents()).toBe(2);
+  });
+  it("test empty input and remove", () => {
+    let n: Name = new StringName("");
+    expect(n.getNoComponents()).toBe(1);
+    n.remove(0);
+    //console.log(n.asString());
+    expect(n.asString()).toBe("");
+    expect(n.getNoComponents()).toBe(0);
+    expect(n.isEmpty()).toBe(true);
   });
 });
 

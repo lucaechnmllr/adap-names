@@ -17,8 +17,18 @@ export class StringArrayName extends AbstractName {
         if (this.components.length === 0) {
             return "";
         }
+
         const parts = this.components.map(c => AbstractName.unmask(c));
-        return parts.join(delimiter);
+
+        if (delimiter === this.delimiter) {
+            return parts.join(delimiter);
+        } 
+        else {
+            const remaskedParts = parts.map(c =>
+                AbstractName.maskForDelimiter(c, delimiter)
+            );
+            return remaskedParts.join(delimiter);
+        }
     }
 
     public asDataString(): string {

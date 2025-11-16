@@ -10,14 +10,15 @@ export class StringName extends AbstractName {
         super();
         this.delimiter = delimiter ?? DEFAULT_DELIMITER;
         this.name = source;
-        this.noComponents = this.countComponents(source);
+        // Special case: empty string has one (empty) component
+        this.noComponents = source.length === 0 ? 1 : this.countComponents(source);
     }
 
     // Counts components in a string considering escape characters
     // E.g., "oss\.cs.fau.de" has 3 components if delimiter is '.'
     // @methodtype helper-method
     private countComponents(str: string): number {
-        if (str.length === 0) return 1; // Empty string has one (empty) component
+        if (str.length === 0) return 0; // Empty string has one (empty) component
 
         let count = 1;
         let escaped = false;
@@ -83,7 +84,10 @@ export class StringName extends AbstractName {
         if (delimiter === this.delimiter) {
             return this.name;
         } else {
-            const parts = this.splitComponents().map(c => AbstractName.unmask(c));
+            const parts = this.splitComponents().map(c => {
+                const unmasked = AbstractName.unmask(c);
+                return AbstractName.maskForDelimiter(unmasked, delimiter);
+            })
             return parts.join(delimiter);
         }
     }
