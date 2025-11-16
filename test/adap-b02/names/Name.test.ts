@@ -3,6 +3,7 @@ import { describe, it, expect } from "vitest";
 import { Name } from "../../../src/adap-b02/names/Name";
 import { StringName } from "../../../src/adap-b02/names/StringName";
 import { StringArrayName } from "../../../src/adap-b02/names/StringArrayName";
+import exp from "constants";
 
 describe("Basic StringName function tests", () => {
   it("test insert", () => {
@@ -39,6 +40,21 @@ describe("MyOwn StringName function tests", () => {
     expect(n.asString()).toBe("");
     expect(n.getNoComponents()).toBe(0);
     expect(n.isEmpty()).toBe(true);
+  });
+  it("test similarity", () => {
+    let n: Name = new StringName("oss..fau.de");
+    let m: Name = new StringArrayName(["oss", "", "fau", "de"]);
+    expect(n.asDataString()).toBe(m.asDataString());
+  });
+  it("test similarity empty", () => {
+    let n: Name = new StringName("");
+    let m: Name = new StringArrayName([""]);
+    expect(n.asDataString()).toBe(m.asDataString());
+    expect(n.getNoComponents()).toBe(m.getNoComponents());
+    n.append("a");
+    m.append("a");
+    expect(n.getNoComponents()).toBe(m.getNoComponents());
+    expect(n.asDataString()).toBe(m.asDataString());
   });
 });
 
